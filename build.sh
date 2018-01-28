@@ -1,11 +1,13 @@
 #!/bin/bash
 
 set -e
-export JANUSGRAPH_IMAGE=janusgraph-dynamodb
+JANUSGRAPH_IMAGE=janusgraph-dynamodb
 
 BUILD_DIR="$(cd $(dirname "$BASH_SOURCE[0]") && pwd)"
 BUILDER_IMAGE=${JANUSGRAPH_IMAGE}-builder
 BUILDER_DIR=${BUILD_DIR}/${BUILDER_IMAGE}
+
+PUBLISHED_IMAGE_NAME=charlieduong94/janusgraph-dynamodb
 
 pushd ${BUILD_DIR}
 
@@ -22,4 +24,7 @@ popd
 
 # build the actual image
 docker build -t ${JANUSGRAPH_IMAGE} .
-docker tag ${JANUSGRAPH_IMAGE} charlieduong94/${JANUSGRAPH_IMAGE}
+docker tag ${JANUSGRAPH_IMAGE} ${PUBLISHED_IMAGE_NAME}
+
+docker tag ${PUBLISHED_IMAGE_NAME}:latest
+docker tag ${PUBLISHED_IMAGE_NAME}:${VERSION}
