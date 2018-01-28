@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  dynamodb:
+    image: cnadiminti/dynamodb-local
+    healthcheck:
+      test: [ 'CMD-SHELL', 'curl -f http://localhost:8000/shell/ || exit 1' ]
+      interval: 1s
+      timeout: 10s
+      retries: 3
+    ports:
+      - 8000:8000
+  janusgraph:
+    image: charlieduong94/janusgraph-dynamodb
+    command:
+      - ./conf/gremlin-server/gremlin-server-local.yaml
+    ports:
+      - 8182:8182
+    depends_on:
+      - dynamodb
